@@ -1,11 +1,9 @@
 -----
 # ☕ Documentação do Banco de Dados: Cafeteria
 
-Este documento detalha as consultas SQL básicas, a estrutura das tabelas e os dados de exemplo inseridos para o banco de dados `Cafeteria`.
+Este documento traz exemplos de comandos para criar, excluir, inserir, e atualizar informações do banco de dados, colocados em destaque no início do documento. para o banco de dados `Cafeteria`.
 
 ## 🔎 Consultas SQL de Exemplo
-
-Exemplos de comandos para recuperar informações do banco de dados, colocados em destaque no início do documento.
 
 ### Consultas Básicas (Seleção de todas as colunas)
 
@@ -44,7 +42,82 @@ SELECT
 FROM Pedidos P
 INNER JOIN Clientes C ON P.id_cliente = C.id_cliente;
 ```
+-----
 
+## ✏️ Alterar Dados (UPDATE)
+### O comando UPDATE é usado para modificar os valores de um ou mais campos em uma tabela.
+
+ Exemplo 1: Alterar o status de um Pedido
+Vamos alterar o status do Pedido 2 de 'Em Preparo' para 'Finalizado'.
+```sql
+
+UPDATE Pedidos
+SET status = 'Finalizado'
+WHERE id_pedido = 2;
+```
+
+ Exemplo 2: Alterar o Preço de um Produto
+Vamos aumentar o preço do 'Espresso' para R$ 6,00.
+```sql
+
+UPDATE Produtos
+SET preco = 6.00
+WHERE nome_produto = 'Espresso';
+```
+
+ Exemplo 3: Adicionar Email a um Cliente (preenchendo um campo nulo)
+O 'Carlos Lima' estava sem email. Vamos adicioná-lo.
+```sql
+
+UPDATE Clientes
+SET email = 'carlos.l@exemplo.com'
+WHERE nome_cliente = 'Carlos Lima';
+```
+
+
+## ❌ Excluir Dados (DELETE)
+### O comando DELETE é usado para remover linhas de uma tabela.
+
+Exemplo 1: Excluir um Produto
+Vamos excluir o produto 'Cheesecake' (id_produto 4).
+
+-- Primeiro, é crucial garantir que nenhum item de pedido dependa deste produto,
+-- ou a exclusão falhará devido à Chave Estrangeira (FOREIGN KEY).
+-- Como a cheesecake não está nos pedidos de exemplo, podemos excluir diretamente:
+```sql
+    
+DELETE FROM Produtos
+WHERE nome_produto = 'Cheesecake';
+```
+
+Exemplo 2: Excluir um Cliente e Seus Pedidos (Necessidade de Cuidado)
+Se você tentar excluir um cliente que tenha pedidos registrados, o banco de dados geralmente bloqueará a operação (se as restrições de FOREIGN KEY estiverem ativas) para evitar pedidos "órfãos". Você precisa excluir os dados dependentes primeiro.
+
+1. Excluir Itens do Pedido
+Primeiro, exclua os itens de pedido que pertencem aos pedidos do cliente.
+-- Exclui os itens do Pedido 1 (pertencente à Ana - id_cliente 1)
+```sql
+
+DELETE FROM Itens_Pedido
+WHERE id_pedido IN (SELECT id_pedido FROM Pedidos WHERE id_cliente = 1);
+```
+
+2. Excluir o Pedido
+Em seguida, exclua o pedido principal.
+-- Exclui o Pedido 1
+```sql
+DELETE FROM Pedidos
+WHERE id_cliente = 1;
+```
+
+3. Excluir o Cliente
+Finalmente, você pode excluir o cliente.
+
+-- Exclui a cliente Ana Silva (id_cliente 1)
+```sql
+DELETE FROM Clientes
+WHERE id_cliente = 1;
+```
 -----
 
 ## 🛠️ Estrutura do Banco de Dados (Schema)
@@ -157,4 +230,4 @@ INSERT INTO Itens_Pedido (id_pedido, id_produto, quantidade, preco_unitario) VAL
 
 -----
 
-Gostaria de criar mais alguma consulta ou adicionar a sintaxe para a **Criação do Banco de Dados** (`CREATE DATABASE` e `USE`) no início do documento?
+
