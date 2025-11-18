@@ -93,7 +93,6 @@ WHERE nome_produto = 'Cheesecake';
 Exemplo 2: Excluir um Cliente e Seus Pedidos (Necessidade de Cuidado)
 Se você tentar excluir um cliente que tenha pedidos registrados, o banco de dados geralmente bloqueará a operação (se as restrições de FOREIGN KEY estiverem ativas) para evitar pedidos "órfãos". Você precisa excluir os dados dependentes primeiro.
 
------
 1. Excluir Itens do Pedido
 Primeiro, exclua os itens de pedido que pertencem aos pedidos do cliente.
 -- Exclui os itens do Pedido 1 (pertencente à Ana - id_cliente 1)
